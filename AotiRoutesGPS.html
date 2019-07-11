@@ -15,7 +15,7 @@
 		</style>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=U1YCvtrqNiTGdD3p8quHqHKKGpVw2cxH"></script>
 		<script src="FileSaver.js"></script>
-		<title>单击获取点击的经纬度并绘制折线轨迹</title>
+		<title>单击获取点击位置的经纬度并绘制折线轨迹</title>
 	</head>
 
 	<body>
@@ -51,54 +51,4 @@
 		route.push([e.point.lng, e.point.lat]);
 		route_1.push(e.point.lng); //经度
 		route_1.push(e.point.lat); //纬度
-		map.clearOverlays(); //清除地图上所有的覆盖物
-		//每一个circle对象都会被保存下来（在内存中），直到网页被关闭或者刷新（亲测）。这是js中的addEventListener函数的机制决定的。
-		var circle = new BMap.Circle(new BMap.Point(e.point.lng, e.point.lat), 2.5); //创建圆圈覆盖物
-		map.addOverlay(circle); //将圆圈覆盖物添加到地图中
-		circle.disableMassClear(); //设置圆圈覆盖物不能被map.clearOverlays清除（其他覆盖物同样有此方法）
-		polyline = [];
-		for(var i = 0; i < route.length; i++) {
-			polyline.push(new BMap.Point(route[i][0], route[i][1]));
-		}
-		//一条线路的所有折线覆盖物
-		polyline = new BMap.Polyline(polyline, {
-			strokeColor: "red", //红色表示当前路径正在绘制，还没有进行生成路径操作
-			strokeWeight: 3,
-			strokeStyle: 'dashed',
-			strokeOpacity: 0.5
-		});
-		map.addOverlay(polyline); //将折线添加到地图中
-	});
-
-	//生成路径
-	var btnGenerateRoute = document.getElementById("btnGenerateRoute");
-	btnGenerateRoute.addEventListener('click', function() {
-		//改变折线覆盖物的颜色为绿色，意味着该折线表示的路径已经生成完毕
-		polyline.setStrokeColor('green'); //该函数执行后会立即生效
-		//设置折线覆盖物不能被map.clearOverlays清除
-		polyline.disableMassClear(); //禁止折线覆盖物在map.clearOverlays方法中被清除
-		//将当前绘制好的路径route_1放到routes中
-		routes.push(route_1);
-		//清空route数组
-		route = [];
-		//清空route_1数组
-		route_1 = [];
-		//提示当前已经生成的路径数目
-		document.getElementById("txt").value = '当前已生成的路径数目：' + routes.length;
-		document.getElementById("currentState").innerHTML = '当前状态：' + '路径' + routes.length + '已生成！';
-		document.getElementById("currentState").style.color = 'green';
-	});
-
-	//保存所有路径的GPS数据
-	var btnGenerateGPS = document.getElementById("btnGenerateGPS");
-	btnGenerateGPS.addEventListener('click', function() {
-		//保存所有的公交线路信息
-		var data = JSON.stringify(routes); //将多维数组存成字符串（这使得数组的中括号、逗号等都会原封不动的保存下来）
-		var file = new File([data], '奥体中心区域路径坐标' + '.json', {
-			type: "text/plain;charset=utf-8"
-		});
-		saveAs(file);
-		document.getElementById("currentState").innerHTML = '当前状态：' + '所有路径GPS数据保存完毕！';
-		document.getElementById("currentState").style.color = 'green';
-	});
-</script>
+		map.clearOverlays(); //清除地图上所有的
